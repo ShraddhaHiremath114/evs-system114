@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base::parent(~{::#content},~{::title})}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update EV Stations</title>
+</head>
+
+<body>
+    <div id="content">
+        <div class="grid grid-cols-12">
+            <div class="col-span-4 md:col-span-3 lg:col-span-3 xl:col-span-3"></div>
+            <div class="col-span-12 md:col-span-6 lg:col-span-6 xl:col-span-6">
+                <div class="block p-6 mt-2 border-t-[10px] border-blue-700 bg-white rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <div data-th-replace="message::messagebox"></div>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Update EV Stations</h5>
+                    <form data-th-action="@{'/admin/update/'}+${id}" method="post" class="mt-5" data-th-object="${EvForm}" enctype="multipart/form-data" novalidate>
+                        <div class="mb-3">
+                            <label for="evname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">EvName</label>
+                            <input type="text" id="evname" data-th-field="*{evname}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                            <p data-th-if="${#fields.hasErrors('evname')}" data-th-errors="*{evname}" class="text-red-600 py-2">Ev name is required</p>
+                        </div>
+                        
+                        <!-- Add fields for address, city, pincode, state, latitude, and longitude -->
+
+                        <div class="mb-3">
+                            <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                            <input type="text" id="address" data-th-field="*{address}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                            <p data-th-if="${#fields.hasErrors('address')}" data-th-errors="*{address}" class="text-red-600 py-2">Address is required</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City</label>
+                            <input type="text" id="city" data-th-field="*{city}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                            <p data-th-if="${#fields.hasErrors('city')}" data-th-errors="*{city}" class="text-red-600 py-2">City is required</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pincode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pincode</label>
+                            <input type="text" id="pincode" data-th-field="*{pincode}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                            <p data-th-if="${#fields.hasErrors('pincode')}" data-th-errors="*{pincode}" class="text-red-600 py-2">Pincode is required</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="state" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">State</label>
+                            <input type="text" id="state" data-th-field="*{state}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                            <p data-th-if="${#fields.hasErrors('state')}" data-th-errors="*{state}" class="text-red-600 py-2">State is required</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Latitude</label>
+                            <input type="text" id="latitude" data-th-field="*{latitude}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                            <p data-th-if="${#fields.hasErrors('latitude')}" data-th-errors="*{latitude}" class="text-red-600 py-2">Latitude is required</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Longitude</label>
+                            <input type="text" id="longitude" data-th-field="*{longitude}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                            <p data-th-if="${#fields.hasErrors('longitude')}" data-th-errors="*{longitude}" class="text-red-600 py-2">Longitude is required</p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="evimage" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image</label>
+                            <input type="file" id="evimage" data-th-field="*{evimage}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-100 dark:hover:bg-gray-600" required />
+                            <p data-th-if="${#fields.hasErrors('evimage')}" data-th-errors="*{evimage}" class="text-red-600 py-2">State is required</p>
+                        </div>
+                        
+                        <div class="mb-1 mt-5 flex justify-center space-x-3">
+                            <button type="submit" class="px-3 py-2 rounded bg-blue-700 text-white">Update</button>
+                            <button type="reset" class="px-3 py-2 rounded bg-blue-700 text-white">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
