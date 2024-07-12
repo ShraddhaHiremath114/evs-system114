@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Distance EV</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://apis.mappls.com/advancedmaps/api/0ec8a551bb6c52185d80282e718eb7df/map_sdk?layer=vector&v=3.0&callback=initMap" defer async></script>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900">
+    <div id="map"></div>
     <div id="content" class="p-5 relative overflow-hidden">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
@@ -17,9 +25,10 @@
                 <span class="sr-only">Action button</span>
                 Get Near By EV Station
             </button> -->
-            <button onclick="getMyCurrentLocation()">Get My Current Location</button>
+            <button onclick="getMyCurrentLocation()" class="ml-6 mt-3 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"><i class="fa-solid fa-location-crosshairs mr-2"></i>Get My Current Location</button>
             <input type="hidden" id="latitudeInput">
             <input type="hidden" id="longitudeInput">
+           
                     <!-- Dropdown menu -->
                     <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
@@ -38,16 +47,44 @@
                         </div>
                     </div>
                 </div>
+                
                 <label for="table-search" class="sr-only">Search</label>
+              
                 <div class="relative">
+                    
                     <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
+                        
                     </div>
-                    <input type="text" id="table-search-users" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for users">
+                    
+                    <input type="text" id="table-search-users" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for EV Stations">
+                
                 </div>
+                <!-- <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" class="mr-2 inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
+                    <span class="sr-only">Action button</span>
+                    Action
+                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                </button> -->
+                
+
+                <form action="@{'/user/evsearch'}" class="mr-4 max-w-sm mx-auto">
+                    <!-- <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label> -->
+                    <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option selected>Choose EV station</option>
+                      <option value="Name">Name</option>
+                      <option value="Distance">Distance</option>
+                      <option value="City">City</option>
+                      <option value="State">State</option>
+                    </select>
+                  </form>
+                  
+  
             </div>
+           
             <div class="relative max-h-96 overflow-y-auto">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -79,6 +116,10 @@
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Distance
+
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Get Direction
 
                             </th>
                         </tr>
@@ -115,22 +156,31 @@
                             </td>
                             <td data-th-text="*{latitude}" class="px-6 py-4">
                                 <div class="flex items-center">
-                                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Online
+                                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                                    <span id="latitudeInput" th:text="*{latitude}"></span>
                                 </div>
                             </td>
                             <td data-th-text="*{longitude}" class="px-6 py-4">
                                 <div class="flex items-center">
-                                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Online
+                                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                                    <span id="longitudeInput" th:text="*{longitude}"></span>
                                 </div>
                             </td>
-                          
+                            
                             <td>
                                 <p th:attr="id='dis-' + *{id}"></p>
                             </td>
+                            <td>
+                               
+                                <button onclick="plotMapLocation(17.714903857631995,75.97749040838417)" class="ml-6 mt-3 py-1 px-4 me-2 mb-2 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    <i class="fa-solid fa-diamond-turn-right"></i> Get Direction
+                                </button>
+                                </td>
                         </tr>
                        
                     </tbody>
                 </table>
+                <div class="bg-slate-200 pl-68 w-full" id="map"></div>
                 <script>
                     function getMyCurrentLocation() {
             if (navigator.geolocation) {
@@ -171,6 +221,69 @@ var ev = document.querySelectorAll('tbody tr');
             return deg * (Math.PI / 180);
         }
         
+       //Map
+       var latitude = 17.714903857631995;
+        var longitude = 75.83558889153056;
+        var map, userMarker;
+
+        function initMap() {
+            map = new mappls.Map('map', {
+                //17.730060206558107, 75.83558889153056
+                //17.714903857631995, 75.97749040838417
+                center: [17.730060206558107, 75.83558889153056],  // Initial center coordinates (Solapur)
+                zoom: 10,  // Zoom level
+                zoomControl: true,
+                location: true
+            });
+        }
+
+        function plotMapLocation(lt, lg) {
+            var latitude=parseFloat(lt);
+            var longitude=parseFloat(lg);
+            if (isNaN(latitude) || isNaN(longitude)) {
+        console.error("Invalid latitude or longitude values: ", latitude, longitude);
+        return;
+    }
+
+            console.log("called")
+            // Create a marker for the user's current location
+            if (userMarker) {
+                userMarker.setMap(null);  // Remove existing marker if present
+            }
+
+            userMarker = new mappls.Marker({
+                map: map,
+                position: {
+                    "lat": latitude,
+                    "lng": longitude
+                },
+                fitbounds: true,
+        icon: "https://maps.mapmyindia.com/images/to.png"
+            });
+
+            // Center the map on the user's location
+            map.setCenter([latitude, longitude]);
+            map.setZoom(15);  // Zoom in to the user's location
+        }
+   
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    plotUserLocation(position.coords.latitude, position.coords.longitude);
+
+                    // Set hidden input values
+                    document.getElementById("latitudeInput").value = position.coords.latitude;
+                    document.getElementById("longitudeInput").value = position.coords.longitude;
+                }, function(error) {
+                    console.error("Error getting user's location: ", error);
+                    alert("Unable to retrieve your location. Please check your location settings and try again.");
+                });
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
                 </script>
             </div>
         </div>
