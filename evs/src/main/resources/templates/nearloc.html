@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base::parent(~{::#content},~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+    <div id="content" class="p-5 relative overflow-hidden">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+                <div>
+                    <button onclick="getLocation()" type="button" class="ml-6 mt-3 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <i class="fa-solid fa-location-crosshairs mr-2"></i>Get My Current Location
+                    </button>
+                    <input type="hidden" id="latitudeInput">
+                    <input type="hidden" id="longitudeInput">
+                </div>
+            </div>
+            <div class="relative max-h-96 overflow-y-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">EV Name</th>
+                            <th scope="col" class="px-6 py-3">Address</th>
+                            <th scope="col" class="px-6 py-3">City</th>
+                            <th scope="col" class="px-6 py-3">Pincode</th>
+                            <th scope="col" class="px-6 py-3">State</th>
+                            <th scope="col" class="px-6 py-3">Latitude</th>
+                            <th scope="col" class="px-6 py-3">Longitude</th>
+                            <th scope="col" class="px-6 py-3">Distance (km)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Iterate over nearlist and display data -->
+                        <tr th:each="station : ${nearlist}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                <img th:src="${station.evimg}" class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="EV Image">
+                                <div class="ps-3">
+                                    <div th:text="${station.evname}" class="text-base font-semibold"></div>
+                                </div>
+                            </td>
+                            <td th:text="${station.address}" class="px-6 py-4"></td>
+                            <td th:text="${station.city}" class="px-6 py-4"></td>
+                            <td th:text="${station.pincode}" class="px-6 py-4"></td>
+                            <td th:text="${station.state}" class="px-6 py-4"></td>
+                            <td th:text="${station.latitude}" class="px-6 py-4"></td>
+                            <td th:text="${station.longitude}" class="px-6 py-4"></td>
+                            <td>
+                                <p th:attr="id='dis-' + ${station.id}"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementById('latitudeInput').value = latitude;
+            document.getElementById('longitudeInput').value = longitude;
+
+            // Calculate distance for each employee
+            // var employees = document.querySelectorAll('tbody tr');
+            // employees.forEach(function(employee) {
+            //     var empId = employee.querySelector('td:nth-child(1)').textContent.trim();
+            //     var empLatitude = parseFloat(employee.querySelector('td:nth-child(4)').textContent);
+            //     var empLongitude = parseFloat(employee.querySelector('td:nth-child(5)').textContent);
+            //     var distance = calculateDistance(latitude, longitude, empLatitude, empLongitude);
+            //     document.getElementById('dis-' + empId).textContent = distance.toFixed(2) + ' km';
+            // });
+        }
+
+        // function calculateDistance(lat1, lon1, lat2, lon2) {
+        //     var R = 6371; // Radius of the earth in km
+        //     var dLat = deg2rad(lat2 - lat1);
+        //     var dLon = deg2rad(lon2 - lon1);
+        //     var a =
+        //         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        //         Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        //         Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        //     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        //     var distance = R * c; // Distance in km
+        //     return distance;
+        // }
+
+        // function deg2rad(deg) {
+        //     return deg * (Math.PI / 180);
+        // }
+    </script>
+</body>
+</html>

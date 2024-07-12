@@ -109,6 +109,20 @@ public class EvController {
         
         return "upviewev";
     }
+
+    @GetMapping("/nearerloc")
+    public String nearerLocation(Model model){
+        List<EvStation> list=evService.getAllEvStations();
+        model.addAttribute("nearlist",list);
+        return "nearloc";
+    }
+
+    @GetMapping("/getnearerloc")
+    public String getneare(Model model){
+        model.addAttribute("list", evService.getAllEvStations());
+        return "maindistance";
+    }
+
     @PostMapping("/admin/update/{id}")
 public String update(@PathVariable("id") int id, @ModelAttribute EvForm evForm, Model model) {
     // Retrieve the EvStation instance by ID

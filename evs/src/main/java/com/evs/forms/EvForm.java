@@ -44,4 +44,6 @@ public class EvForm {
    
     private MultipartFile evimage;
     private String evimg;
+
+    private Double distance;
 }

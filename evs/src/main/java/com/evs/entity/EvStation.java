@@ -16,11 +16,12 @@ import lombok.ToString;
 
 @Entity
 @Getter
+@ToString
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
+
 public class EvStation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,9 +31,9 @@ public class EvStation {
     private String city;
     private String pincode;
     private String state;
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
     private String evimg;
-
+    private Double distance;
 
 }

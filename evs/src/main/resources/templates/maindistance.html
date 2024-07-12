@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV</title>
+    <title>Distance EV</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 dark:bg-gray-900">
@@ -17,7 +17,9 @@
                 <span class="sr-only">Action button</span>
                 Get Near By EV Station
             </button> -->
-            <a th:href="@{/getnearerloc}">Get Nearby Location</a>
+            <button onclick="getMyCurrentLocation()">Get My Current Location</button>
+            <input type="hidden" id="latitudeInput">
+            <input type="hidden" id="longitudeInput">
                     <!-- Dropdown menu -->
                     <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
@@ -50,6 +52,9 @@
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Id
+                            </th>
                             
                             <th scope="col" class="px-6 py-3">
                                 EV Name
@@ -72,14 +77,19 @@
                             <th scope="col" class="px-6 py-3">
                                Longitude
                             </th>
-                           
+                            <th scope="col" class="px-6 py-3">
+                                Distance
+
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr data-th-object="${c}"
                         data-th-each="c:${list}"
                          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            
+                         <td data-th-text="*{id}" class="px-6 py-4">
+                            React Developer
+                        </td>
                             <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                                 <img data-th-src="@{*{evimg}}" class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Jese image">
                                 <div class="ps-3">
@@ -114,11 +124,54 @@
                                 </div>
                             </td>
                           
-                            
+                            <td>
+                                <p th:attr="id='dis-' + *{id}"></p>
+                            </td>
                         </tr>
                        
                     </tbody>
                 </table>
+                <script>
+                    function getMyCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementById('latitudeInput').value = latitude;
+            document.getElementById('longitudeInput').value = longitude;
+console.log(latitude+" "+longitude);
+var ev = document.querySelectorAll('tbody tr');
+            ev.forEach(function(e) {
+                var evId = e.querySelector('td:nth-child(1)').textContent.trim();
+                var evLatitude = parseFloat(e.querySelector('td:nth-child(7)').textContent);
+                var evLongitude = parseFloat(e.querySelector('td:nth-child(8)').textContent);
+                var distance = calculateDistance(latitude, longitude, evLatitude, evLongitude);
+                document.getElementById('dis-' + evId).textContent = distance.toFixed(2) + ' km';
+            }); 
+        }
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2 - lat1);
+            var dLon = deg2rad(lon2 - lon1);
+            var a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var distance = R * c; // Distance in km
+            return distance;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+        
+                </script>
             </div>
         </div>
     </div>
